@@ -1,0 +1,16 @@
+{
+  "name": "Cookie Crawler",
+  "manifest_version": 2,
+"version": "0.1",
+  "description": "Shows all cookies.",
+  "browser_action": {
+  },
+  "permissions": [
+  "cookies",
+    "<all_urls>"
+  ],
+"background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
+}
