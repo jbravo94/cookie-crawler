@@ -1,16 +1,20 @@
 {
-  "name": "Cookie Crawler",
+  "name": "Crowd Cookie Extractor",
   "manifest_version": 2,
-"version": "0.1",
-  "description": "Shows all cookies.",
+  "version": "0.1",
+  "description": "Copies cookie to service desk queue alert.",
   "browser_action": {
+    "default_popup": "popup.html"
   },
   "permissions": [
-  "cookies",
+    "cookies",
+    "storage",
     "<all_urls>"
   ],
-"background": {
-    "scripts": ["background.js"],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   }
 }
