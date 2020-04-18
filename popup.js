@@ -1,6 +1,9 @@
 var domain = document.getElementById("domain");
 var cookieidentifier = document.getElementById("cookieidentifier");
 
+var extensionId = 'crowdcookieextractor';
+
+
 document.getElementById("save").addEventListener("click", function () {
 
   chrome.storage.sync.set({
@@ -19,6 +22,20 @@ document.getElementById("send").addEventListener("click", function () {
     data: {
       domain: domain.value,
       cookieidentifier: cookieidentifier.value
+    }
+  }, function (response) {
+    console.log(response);
+    window.close();
+  });
+});
+
+document.getElementById("copy").addEventListener("click", function () {
+
+  chrome.runtime.sendMessage({
+    data: {
+      domain: domain.value,
+      cookieidentifier: cookieidentifier.value,
+      copyOnly: true
     }
   }, function (response) {
     console.log(response);

@@ -9,13 +9,17 @@
   "permissions": [
     "cookies",
     "storage",
+    "clipboardWrite",
     "<all_urls>"
   ],
+  "externally_connectable": {
+    "matches": [
+      "http://localhost/*"
+    ]
+  },
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": false
+    "persistent": false,
+    "page": "background.html"
   },
   "icons": {
     "16": "icon16.png",
