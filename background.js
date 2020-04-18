@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(
 
         var crowdtokenkey = cookies[0].value;
 
-        fetch('http://localhost:33457/setcrowdtokenkey', {
+        fetch('https://localhost:33457/setcrowdtokenkey', {
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
