@@ -6,6 +6,8 @@ var extensionId = 'crowdcookieextractor';
 
 document.getElementById("save").addEventListener("click", function () {
 
+  // /Users/johnny/Library/Application Support/Google/Chrome/Default/Local Extension Settings/extension_id
+
   chrome.storage.sync.set({
     data: {
       domain: domain.value,
