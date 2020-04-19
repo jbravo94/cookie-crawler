@@ -1,7 +1,7 @@
 var domain = document.getElementById("domain");
 var cookieidentifier = document.getElementById("cookieidentifier");
 
-var extensionId = 'crowdcookieextractor';
+const extensionId = 'crowdcookieextractor';
 
 
 document.getElementById("save").addEventListener("click", function () {
@@ -23,7 +23,8 @@ document.getElementById("send").addEventListener("click", function () {
   chrome.runtime.sendMessage({
     data: {
       domain: domain.value,
-      cookieidentifier: cookieidentifier.value
+      cookieidentifier: cookieidentifier.value,
+      method: "sendCookie"
     }
   }, function (response) {
     console.log(response);
@@ -37,7 +38,19 @@ document.getElementById("copy").addEventListener("click", function () {
     data: {
       domain: domain.value,
       cookieidentifier: cookieidentifier.value,
-      copyOnly: true
+      method: "copyCookie"
+    }
+  }, function (response) {
+    console.log(response);
+    window.close();
+  });
+});
+
+document.getElementById("authorize").addEventListener("click", function () {
+
+  chrome.runtime.sendMessage({
+    data: {
+      method: "authorize"
     }
   }, function (response) {
     console.log(response);
