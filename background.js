@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(
 
           var md = forge.md.sha256.create();
 
-          
+
           var digest = md.update(salt).digest().toHex();
 
           var stringtocompare = data.stringtocompare;
@@ -33,22 +33,30 @@ chrome.runtime.onMessage.addListener(
           var md2 = forge.md.sha256.create();
           var finalsalt = forge.util.bytesToHex(forge.random.getBytesSync(10)).toUpperCase();
 
-          if(data.digest === digest && confirm(stringtocompare.split('').join(' '))) {
-            fetch('https://localhost:33457/authorizechromeextension/token', {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa("authorize" + ":" + "supersecret")
-          },
-          body: JSON.stringify({ salt: finalsalt, digest: md2.update(newsalt).digest().toHex() })
+
+          if (data.digest === digest && confirm(stringtocompare.split('').join(' '))) {
+
+            return fetch('https://localhost:33457/authorizechromeextensiontoken', {
+              method: 'post',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa("authorize" + ":" + "supersecret")
+              },
+              body: JSON.stringify({ salt: finalsalt, digest: md2.update(data.newsalt).digest().toHex() })
+            });
+
+          }
+
+          throw "Rejected";
         }).then(function (response) {
+          alert(JSON.stringify(response));
           return response.json();
         }).then(function (data) {
 
           alert(data);
           var md3 = forge.md.sha256.create();
 
-          var prepayload = {salt: data.salt, password: data.password};
+          var prepayload = { salt: data.salt, password: data.password };
 
           var digest = md3.update(prepayload).digest().toHex();
 
@@ -62,29 +70,20 @@ chrome.runtime.onMessage.addListener(
               secure: true
             }, function (cookie) {
               alert("New cookie generated: " + JSON.stringify(cookie));
-              sendResponse({ message: "Returned" });
+
               return;
             });
           }
 
-
-
-          //sendResponse({ message: "Returned" });
           return;
         }).catch(function (err) {
+          console.error(err);
           alert("Error occured: " + JSON.stringify(err));
-          sendResponse({ message: "Returned" });
           return;
         });
-          }
 
-          //sendResponse({ message: "Returned" });
-          return;
-        }).catch(function (err) {
-          alert("Error occured: " + JSON.stringify(err));
-          sendResponse({ message: "Returned" });
-          return;
-        });
+        sendResponse({ message: "Returned" });
+        return;
 
       } else if (request.data.domain && request.data.cookieidentifier) {
 
@@ -93,7 +92,7 @@ chrome.runtime.onMessage.addListener(
           name: extensionId
         }, function (cookie) {
           if (cookie != null) {
-            console.log("Loading existing cookie: " + JSON.stringify(cookie));
+            //alert("Loading existing cookie: " + JSON.stringify(cookie));
             chrome.cookies.getAll({ domain: request.data.domain, name: request.data.cookieidentifier }, function (cookies) {
 
               if (!cookies || cookies.length === 0 || !cookies[0] || !cookies[0].value) {
@@ -117,7 +116,6 @@ chrome.runtime.onMessage.addListener(
 
                 crowdcookie.value = '';
 
-                sendResponse({ message: "Returned" });
                 return;
 
               } else if (request.data.method === "sendCookie") {
@@ -126,34 +124,39 @@ chrome.runtime.onMessage.addListener(
                   method: 'post',
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa("chromeext" + ":" + "supersecret")
+                    'Authorization': 'Basic ' + btoa("chromeext" + ":" + cookie.value)
                   },
                   body: JSON.stringify({ crowdtokenkey: crowdtokenkey })
                 }).then(function (response) {
                   return response.json();
                 }).then(function (data) {
                   alert(JSON.stringify(data));
-                  sendResponse({ message: "Returned" });
+                  return
                 }).catch(function (err) {
+                  console.error(err);
                   alert("Error occured: " + JSON.stringify(err));
-                  sendResponse({ message: "Returned" });
+                  return;
                 });
 
               } else {
                 alert("Method '" + request.data.method + "' not supported!");
+                return;
               }
 
             });
           } else {
             alert("Not authorization cookie found. Please authorize first.");
-            sendResponse({ message: "Returned" });
             return;
           }
         });
       } else {
         alert("Insufficient parameters provided.")
+        sendResponse({ message: "Returned" });
+        return;
       }
     } else {
       alert("Please provide proper payload.");
+      sendResponse({ message: "Returned" });
+      return;
     }
   });
