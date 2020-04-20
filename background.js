@@ -25,7 +25,6 @@ chrome.runtime.onMessage.addListener(
 
           var md = forge.md.sha256.create();
 
-
           var digest = md.update(salt).digest().toHex();
 
           var stringtocompare = data.stringtocompare;
@@ -49,11 +48,9 @@ chrome.runtime.onMessage.addListener(
 
           throw "Rejected";
         }).then(function (response) {
-          alert(JSON.stringify(response));
           return response.json();
         }).then(function (data) {
 
-          alert(data);
           var md3 = forge.md.sha256.create();
 
           var prepayload = { salt: data.salt, password: data.password };
@@ -69,7 +66,7 @@ chrome.runtime.onMessage.addListener(
               value: data.password,
               secure: true
             }, function (cookie) {
-              alert("New cookie generated: " + JSON.stringify(cookie));
+              alert("New cookie generated and stored encrypted with value: " + cookie.value);
 
               return;
             });
