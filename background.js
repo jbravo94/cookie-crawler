@@ -75,7 +75,14 @@ chrome.runtime.onMessage.addListener(
           return;
         }).catch(function (err) {
           console.error(err);
-          alert("Error occured: " + JSON.stringify(err));
+
+          var r = confirm("Error occured: " + JSON.stringify(err) + ". You probably have to trust the SSL certificate. Do you want to open a test url?");
+          if (r == true) {
+            chrome.windows.create({
+              url: "https://localhost:33457/test",
+              type: "popup"
+            });
+          }
           return;
         });
 
